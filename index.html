@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Broken Shift vs Paid Travel Calculator</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg>
+        </span>
+        <div>
+          <h1>Broken Shift vs Paid Travel</h1>
+          <p>SCHADS Award · cost comparison for back-to-back shifts</p>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Sections">
+        <button role="tab" id="tab-roster" aria-controls="panel-roster" aria-selected="true">Roster</button>
+        <button role="tab" id="tab-settings" aria-controls="panel-settings" aria-selected="false" tabindex="-1">Settings</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="panel-roster" role="tabpanel" aria-labelledby="tab-roster"></div>
+      <div id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" hidden></div>
+    </main>
+
+    <noscript><p class="errors">This app needs JavaScript enabled.</p></noscript>
+  </div>
+
+  <div id="print-root" aria-hidden="true"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

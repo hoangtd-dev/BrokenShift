@@ -1,0 +1,60 @@
+/* Loaded with media="print". Only #print-root is shown when exporting to PDF. */
+@page { size: A4; margin: 14mm; }
+
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { background: #fff; color: #17202e; font: 10pt/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+#app { display: none !important; }
+#print-root { display: block !important; }
+
+.print-page { break-after: page; page-break-after: always; }
+.print-page:last-child { break-after: auto; page-break-after: auto; }
+.print-page h1, .print-page h3, .print-page p { margin: 0; }
+
+/* Header */
+.p-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12mm; padding-bottom: 4mm; border-bottom: 2px solid #17202e; margin-bottom: 6mm; }
+.p-kicker { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .08em; color: #5f6b7d; font-weight: 600; }
+.p-head h1 { font-size: 24pt; line-height: 1.15; letter-spacing: -.01em; }
+.p-sub { color: #5f6b7d; margin-top: 1mm !important; }
+.p-date { display: flex; flex-direction: column; align-items: flex-end; font-size: 8.5pt; color: #5f6b7d; text-align: right; white-space: nowrap; }
+.p-date strong { font-size: 11pt; color: #17202e; }
+
+/* Headline result */
+.p-banner { display: flex; flex-direction: column; gap: 1mm; padding: 5mm 6mm; border-radius: 3mm; background: #0f7a43; color: #fff; margin-bottom: 6mm; }
+.p-banner.neutral { background: #4b5668; }
+.p-banner-label { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .08em; opacity: .85; font-weight: 600; }
+.p-banner-main { font-size: 20pt; font-weight: 800; line-height: 1.2; }
+.p-banner-sub { font-size: 11pt; opacity: .92; }
+
+/* Weekly / monthly blocks */
+.p-periods { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-bottom: 6mm; }
+.p-period h3 { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .06em; color: #5f6b7d; margin-bottom: 2mm; }
+.p-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.p-box { border: 1.5px solid #d3d9e3; border-radius: 2.5mm; padding: 3mm 3.5mm; display: flex; flex-direction: column; gap: .5mm; background: #f8f9fb; }
+.p-box-label { font-size: 8pt; color: #5f6b7d; font-weight: 600; }
+.p-box-value { font-size: 17pt; font-weight: 700; color: #5f6b7d; font-variant-numeric: tabular-nums; }
+.p-box.best { background: #dcf5e6; border-color: #0f7a43; border-width: 2px; }
+.p-box.best .p-box-label { color: #0f7a43; }
+.p-box.best .p-box-value { color: #0f7a43; font-size: 20pt; font-weight: 800; }
+.p-box-flag { align-self: flex-start; background: #0f7a43; color: #fff; font-size: 7.5pt; font-weight: 700; padding: .3mm 2.5mm; border-radius: 99px; }
+.p-verdict-line { margin-top: 2mm !important; font-weight: 600; color: #17202e; }
+
+/* Tables */
+.p-section { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .06em; color: #5f6b7d; margin-bottom: 2mm !important; }
+.print-page table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-bottom: 6mm; }
+.print-page th, .print-page td { padding: 2mm 2.5mm; border-bottom: 1px solid #d3d9e3; text-align: left; }
+.print-page thead th { background: #eef1f6; color: #4b5668; font-size: 8pt; text-transform: uppercase; letter-spacing: .03em; }
+.print-page tbody th { font-weight: 600; }
+.print-page .num { text-align: right; font-variant-numeric: tabular-nums; }
+.print-page td.best { background: #dcf5e6; color: #0f7a43; font-weight: 700; }
+.print-page td.worse { color: #7a8596; }
+.print-page tr { break-inside: avoid; page-break-inside: avoid; }
+.print-page tr.total th, .print-page tr.total td { border-top: 2px solid #17202e; font-weight: 700; }
+
+/* Assumptions */
+.p-assume { border-top: 1px solid #d3d9e3; padding-top: 3mm; break-inside: avoid; }
+.p-assume h3 { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .06em; color: #5f6b7d; margin-bottom: 2mm; }
+.p-assume dl { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3mm; margin: 0; }
+.p-assume dt { font-size: 7.5pt; color: #5f6b7d; }
+.p-assume dd { margin: 0; font-weight: 600; }
+.p-warn { margin-top: 2mm !important; color: #b3261e; font-size: 8.5pt; }
+.p-foot { margin-top: 3mm !important; font-size: 8pt; color: #5f6b7d; }
