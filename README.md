@@ -26,7 +26,8 @@ Sanity checks for the calculator: open `http://localhost:8000/tests.html`.
 - **Roster tab:** add one row per pair of shifts (employee, weekday, km, unpaid breaks). Pick an employee in the left list (searchable) or "Overview" for the whole roster. The lower cost is highlighted green. Edit, duplicate and delete are on each row.
 - **Each row is one pair of shifts per week**, so employee and roster totals are weekly figures. Monthly = weekly × weeks-per-month factor.
 - **Settings tab:** allowances, flat travel amount, km-rate periods, calculation date (blank = today), weeks per month. Saved in the browser's localStorage. "Reset to defaults" restores the values below.
-- **PDF:** "Export PDF" (per employee) or "Export all employees" opens the print dialog; choose *Save as PDF*. One A4 page per employee.
+- **Cost B** is per trip: 1 unpaid break = 1 trip, 2 unpaid breaks = 2 trips, so the flat amount is multiplied by trips (2 breaks = $20 flat, not $10). Km are counted once: Cost B = trips × flat + km × rate.
+- **PDF:** "Export summary" = one numbers-only page for the whole roster. "Export details" (per employee, or all) = one page per employee. "B vs A" is the % change from broken shift (A) to paid travel (B): (B − A) / A. Choose *Save as PDF* in the print dialog.
 
 ## Changing the defaults
 
@@ -62,3 +63,7 @@ tests.html + js/tests.js   calculator checks
 - Money is rounded to cents per row, then summed.
 - If the calculation date falls outside every km-rate period, the nearest earlier period (or the earliest) is used and a warning is shown.
 - Data stays in your browser; nothing is sent anywhere.
+
+## Moving data to another device
+
+Settings tab → **Backup & transfer**. *Export data (JSON)* downloads all rows and settings; on the other device choose *Import data…* and pick that file. Importing replaces what is saved on that device (you are asked to confirm). Invalid rows in the file are skipped.

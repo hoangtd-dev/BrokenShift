@@ -46,7 +46,12 @@ test('km rate: before first period is flagged', () => {
 test('km rate: no periods gives 0', () => eq(findKmRate([], '2026-11-10'), { rate: 0, period: null, status: 'none' }));
 test('cost B: flat + km x rate', () => eq(paidTravelCost(settings, 10, 1.05), 20.5));
 test('cost B: 0 km is just the flat amount', () => eq(paidTravelCost(settings, 0, 1.05), 10));
-test('compare: A costlier', () => eq(compareCosts(21.81, 20.5), { costA: 21.81, costB: 20.5, costlier: 'A', cheaper: 'B', difference: 1.31 }));
+test('cost B: 2 trips doubles flat amount ($20, not $10)', () => eq(paidTravelCost(settings, 0, 1.05, 2), 20));
+test('cost B: 2 trips = 2 x flat + km x rate (km not doubled)', () => eq(paidTravelCost(settings, 10, 1.05, 2), 30.5));
+test('cost B: 12 km, 2 trips', () => eq(paidTravelCost(settings, 12, 1.05, 2), 32.6));
+test('compare: A costlier', () => { const c = compareCosts(21.81, 20.5); eq([c.costlier, c.cheaper, c.difference, c.signed], ['A', 'B', 1.31, -1.31]); });
+test('compare: pct is change from A to B', () => eq(Math.round(compareCosts(20, 15).pct), -25));
+test('compare: pct null when A is 0', () => eq(compareCosts(0, 5).pct, null));
 test('compare: B costlier', () => eq(compareCosts(21.81, 30).costlier, 'B'));
 test('compare: equal', () => eq(compareCosts(10, 10).costlier, 'equal'));
 test('monthly = weekly x factor', () => eq(monthlyEstimate(100, 50, 4.33).costA, 433));
@@ -64,9 +69,9 @@ test('groupByEmployee merges names case-insensitively and sorts by day', () => {
 test('summarise totals', () => {
   const s = summarise(rows.slice(0, 2), settings, 1.05);
   eq(s.weekly.costA, 50.68); // 21.81 + 28.87
-  eq(s.weekly.costB, 35.75); // (10 + 10.5) + (10 + 5.25)
+  eq(s.weekly.costB, 45.75); // 20.5 (1 trip, 10 km) + 25.25 (2 trips, 5 km)
   eq(s.weekly.costlier, 'A');
-  eq(s.weekly.difference, 14.93);
+  eq(s.weekly.difference, 4.93);
 });
 test('weekdayBreakdown covers 7 days', () => {
   const b = weekdayBreakdown(rows, settings, 1.05);

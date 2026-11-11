@@ -172,3 +172,4 @@ td.cost.worse { color: #7a8596; }
   .form-grid-inline { grid-template-columns: 1fr; }
 }
 .head-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.row-actions { flex-wrap: nowrap; }

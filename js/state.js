@@ -50,16 +50,19 @@ function sanitiseSettings(raw) {
 
 function sanitiseRows(raw) {
   if (!Array.isArray(raw)) return [];
+  const seen = new Set();
   return raw
     .filter((r) => r && typeof r.employee === 'string' && r.employee.trim() && isNum(r.km) && r.km >= 0)
     .map((r) => ({
-      id: typeof r.id === 'string' ? r.id : newId(),
+      id: typeof r.id === 'string' && !seen.has(r.id) && seen.add(r.id) ? r.id : newId(),
       employee: r.employee.trim(),
       day: Number.isInteger(r.day) && r.day >= 0 && r.day <= 6 ? r.day : 0,
       km: r.km,
       breaks: r.breaks === 2 ? 2 : 1,
     }));
 }
+
+const EXPORT_APP = 'broken-shift-calculator';
 
 /**
  * Create the store. Storage is injectable so tests can pass a fake.
@@ -119,6 +122,29 @@ export function createStore(storage = globalThis.localStorage) {
     /** @param {string} id */
     deleteRow(id) {
       commit({ ...state, rows: state.rows.filter((r) => r.id !== id) });
+    },
+
+    /**
+     * Snapshot of all saved data, suitable for JSON.stringify and a later importData().
+     * @returns {{app: string, version: number, exportedAt: string, settings: Settings, rows: RosterRow[]}}
+     */
+    exportData() {
+      return { app: EXPORT_APP, version: 1, exportedAt: new Date().toISOString(), settings: state.settings, rows: state.rows };
+    },
+
+    /**
+     * Replace all data with an exported snapshot. Invalid rows are skipped.
+     * @param {unknown} payload parsed JSON from exportData()
+     * @returns {{rows: number, skipped: number}}
+     * @throws {Error} when the payload is not an export from this app
+     */
+    importData(payload) {
+      if (!payload || typeof payload !== 'object' || payload.app !== EXPORT_APP || !Array.isArray(payload.rows)) {
+        throw new Error('This file is not a Broken Shift Calculator export.');
+      }
+      const rows = sanitiseRows(payload.rows);
+      commit({ settings: sanitiseSettings(payload.settings), rows });
+      return { rows: rows.length, skipped: payload.rows.length - rows.length };
     },
 
     /** Remove every row for an employee (case-insensitive name match). @param {string} name */

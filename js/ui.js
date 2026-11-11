@@ -95,7 +95,7 @@ const td = (content, cls) => el('td', { class: cls }, content);
  * Mount the roster view.
  * @param {HTMLElement} root
  * @param {ReturnType<import('./state.js').createStore>} store
- * @param {{onExportEmployee: (name: string) => void, onExportAll: () => void}} handlers
+ * @param {{onExportEmployee: (name: string) => void, onExportSummary: () => void, onExportDetails: () => void}} handlers
  */
 export function mountRoster(root, store, handlers) {
   let editingId = null;
@@ -266,7 +266,9 @@ export function mountRoster(root, store, handlers) {
     return [
       el('div', { class: 'section-head' },
         el('h2', {}, 'Whole roster'),
-        el('button', { type: 'button', onclick: handlers.onExportAll }, 'Export all employees (PDF)')),
+        el('div', { class: 'head-actions' },
+          el('button', { type: 'button', onclick: handlers.onExportSummary }, 'Export summary (PDF)'),
+          el('button', { type: 'button', onclick: handlers.onExportDetails }, 'Export all details (PDF)'))),
       el('section', { class: 'card hero' },
         el('div', { class: 'kpi-row' },
           kpiPair('Weekly total', all.weekly, 'per week'),
@@ -314,7 +316,7 @@ export function mountRoster(root, store, handlers) {
       el('div', { class: 'section-head' },
         el('h2', {}, group.name),
         el('div', { class: 'head-actions' },
-          el('button', { type: 'button', onclick: () => handlers.onExportEmployee(group.name), 'aria-label': `Export PDF for ${group.name}` }, 'Export PDF'),
+          el('button', { type: 'button', onclick: () => handlers.onExportEmployee(group.name), 'aria-label': `Export PDF for ${group.name}` }, 'Export details (PDF)'),
           el('button', { type: 'button', class: 'danger', 'aria-label': `Delete all data for ${group.name}`, onclick: () => {
             const n = group.rows.length;
             if (!confirm(`Delete ${group.name} and all ${n} row${n === 1 ? '' : 's'}? This cannot be undone.`)) return;

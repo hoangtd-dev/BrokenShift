@@ -2,13 +2,14 @@
 import { createStore } from './state.js';
 import { mountRoster } from './ui.js';
 import { mountSettings } from './settings.js';
-import { exportPdf } from './pdf.js';
+import { exportDetails, exportSummary } from './pdf.js';
 
 const store = createStore();
 
 mountRoster(document.getElementById('panel-roster'), store, {
-  onExportEmployee: (name) => exportPdf(store, [name]),
-  onExportAll: () => exportPdf(store, null),
+  onExportEmployee: (name) => exportDetails(store, [name]),
+  onExportSummary: () => exportSummary(store),
+  onExportDetails: () => exportDetails(store, null),
 });
 mountSettings(document.getElementById('panel-settings'), store);
 

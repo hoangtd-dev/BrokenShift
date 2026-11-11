@@ -15,7 +15,16 @@
  */
 /** @typedef {{id: string, employee: string, day: number, km: number, breaks: 1|2}} RosterRow  day: 0 = Monday … 6 = Sunday */
 /** @typedef {{rate: number, period: RatePeriod|null, status: 'matched'|'outside'|'none'}} RateLookup */
-/** @typedef {{costA: number, costB: number, costlier: 'A'|'B'|'equal', cheaper: 'A'|'B'|'equal', difference: number}} Comparison */
+/**
+ * @typedef {Object} Comparison
+ * @property {number} costA
+ * @property {number} costB
+ * @property {'A'|'B'|'equal'} costlier
+ * @property {'A'|'B'|'equal'} cheaper
+ * @property {number} difference  absolute difference
+ * @property {number} signed      costB - costA (negative = paid travel is lower)
+ * @property {number|null} pct    change from A to B in percent ((B - A) / A * 100); null when A is 0
+ */
 
 export const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -57,14 +66,16 @@ export function findKmRate(periods, dateIso) {
 }
 
 /**
- * Cost B: flat travel amount plus kilometres at the applicable rate.
+ * Cost B: flat travel amount per trip, plus kilometres at the applicable rate.
+ * Trips = unpaid breaks (1 or 2); the flat amount is multiplied by trips, the km are counted once.
  * @param {Settings} settings
- * @param {number} km
+ * @param {number} km distance entered for the pair
  * @param {number} kmRate
+ * @param {number} [trips=1]
  * @returns {number}
  */
-export function paidTravelCost(settings, km, kmRate) {
-  return roundCents(settings.travelFlat + km * kmRate);
+export function paidTravelCost(settings, km, kmRate, trips = 1) {
+  return roundCents(trips * settings.travelFlat + km * kmRate);
 }
 
 /**
@@ -75,13 +86,17 @@ export function paidTravelCost(settings, km, kmRate) {
  */
 export function compareCosts(costA, costB) {
   const difference = roundCents(Math.abs(costA - costB));
-  if (difference === 0) return { costA, costB, costlier: 'equal', cheaper: 'equal', difference };
+  const signed = roundCents(costB - costA);
+  const pct = costA === 0 ? null : (signed / costA) * 100;
+  if (difference === 0) return { costA, costB, costlier: 'equal', cheaper: 'equal', difference, signed, pct };
   return {
     costA,
     costB,
     costlier: costA > costB ? 'A' : 'B',
     cheaper: costA > costB ? 'B' : 'A',
     difference,
+    signed,
+    pct,
   };
 }
 
@@ -93,7 +108,7 @@ export function compareCosts(costA, costB) {
  * @returns {Comparison}
  */
 export function calculateRow(row, settings, kmRate) {
-  return compareCosts(brokenShiftAllowance(settings, row.breaks), paidTravelCost(settings, row.km, kmRate));
+  return compareCosts(brokenShiftAllowance(settings, row.breaks), paidTravelCost(settings, row.km, kmRate, row.breaks));
 }
 
 /**

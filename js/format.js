@@ -41,3 +41,21 @@ export function describeCostlier(c) {
 export function cheaperLabel(cheaper) {
   return cheaper === 'A' ? 'Broken shift' : cheaper === 'B' ? 'Paid travel' : 'Equal';
 }
+
+/**
+ * Signed percentage, e.g. "+12.3%" / "−35.2%"; "n/a" when not defined.
+ * @param {number|null} pct
+ * @returns {string}
+ */
+export function formatPct(pct) {
+  if (pct == null) return 'n/a';
+  const rounded = Math.round(pct * 10) / 10;
+  if (rounded === 0) return '0.0%';
+  return `${rounded > 0 ? '+' : '−'}${Math.abs(rounded).toFixed(1)}%`;
+}
+
+/** Signed AUD amount, e.g. "+$1.20" / "−$3.40". */
+export function formatSignedAUD(n) {
+  if (n === 0) return formatAUD(0);
+  return `${n > 0 ? '+' : '−'}${formatAUD(Math.abs(n))}`;
+}
